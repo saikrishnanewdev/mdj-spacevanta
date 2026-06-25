@@ -36,7 +36,12 @@ export default function Navbar({ onOpenLogin, profile, onLogout, onChangePasswor
       return
     }
     if (href.startsWith('#')) {
+      e.preventDefault()
       setActiveSection(href.slice(1))
+      const element = document.querySelector(href)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
     }
   }
 
@@ -60,9 +65,14 @@ export default function Navbar({ onOpenLogin, profile, onLogout, onChangePasswor
           href="#home" 
           className="logo-link" 
           id="logo-anchor"
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault()
             if (profile) {
               onLogout()
+            }
+            const element = document.querySelector('#home')
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' })
             }
           }}
         >

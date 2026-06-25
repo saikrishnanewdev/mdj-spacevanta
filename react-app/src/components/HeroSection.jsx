@@ -77,7 +77,17 @@ export default function HeroSection({ onOpenModal }) {
             <RightFeature delay={1.1} icon={<IconNodes />} title="Easy" desc="Integrations" />
           </div>
 
-          <a href="#store" className="btn btn-gradient btn-bracket hero-btn-store">
+          <a 
+            href="#store" 
+            className="btn btn-gradient btn-bracket hero-btn-store"
+            onClick={(e) => {
+              e.preventDefault();
+              const element = document.querySelector('#store');
+              if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+          >
             [VISIT STORE]
           </a>
         </div>

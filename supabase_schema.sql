@@ -300,7 +300,8 @@ CREATE OR REPLACE FUNCTION public.notify_product_owner_on_demo()
 RETURNS TRIGGER AS $$
 BEGIN
   PERFORM net.http_post(
-    url := 'https://your-api-endpoint.com/send-demo-email'::text,
+    -- IMPORTANT: Replace 'abcdefghijklmnopqrst.supabase.co' with your actual Supabase project URL
+    url := 'https://abcdefghijklmnopqrst.supabase.co/functions/v1/send-demo-email'::text,
     headers := '{"Content-Type": "application/json"}'::jsonb,
     body := jsonb_build_object(
       'fullName', NEW.full_name,

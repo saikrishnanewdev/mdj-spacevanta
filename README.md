@@ -14,13 +14,15 @@ Welcome to **MDJ SpaceVanta** — A modern, fully responsive school management a
 - **Dashboard**: Complete administrative control with an intuitive user interface.
 - **CSV Imports**: Quickly onboard students or other administrators via automated CSV batch uploading.
 - **Grades Management**: AI-driven exam evaluation management utilizing Supabase Edge Functions to auto-grade scanned exam papers.
+- **Demo Request Notifications**: Automatic email alerts powered by Supabase Webhooks and Resend when a new school requests a demo.
 
 ## Tech Stack 🛠️
 
 - **Frontend**: [React.js](https://reactjs.org/) + [Vite](https://vitejs.dev/)
-- **Backend/Database**: [Supabase](https://supabase.com/) (PostgreSQL, Auth, Storage)
+- **Backend/Database**: [Supabase](https://supabase.com/) (PostgreSQL, Auth, Storage, Webhooks)
 - **Styling**: Vanilla CSS with modern Glassmorphism and responsive CSS grids
 - **AI Processing**: Deno-based Supabase Edge Functions with Gemini integration
+- **Email Delivery**: [Resend](https://resend.com/) API integrated via Deno Edge Functions
 
 ## Quick Start 🚀
 

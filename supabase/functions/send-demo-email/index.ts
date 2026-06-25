@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'MDJ SpaceVanta <onboarding@resend.dev>',
+        from: 'MDJ SpaceVanta <hello@mdjspacevanta.online>',
         to: ADMIN_EMAIL, 
         reply_to: email, // This allows you to just hit "Reply" in Gmail and it goes to the requester
         subject: `New Demo Request from ${schoolName}`,

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Navbar from './components/Navbar'
 import HeroSection from './components/HeroSection'
-import FeaturesBar from './components/FeaturesBar'
+
 import ServicesSection from './components/ServicesSection'
 import StoreSection from './components/StoreSection'
 import AboutSection from './components/AboutSection'
@@ -628,7 +628,7 @@ export default function App() {
         {!profile ? (
           <>
             <HeroSection onOpenModal={() => setModalOpen(true)} />
-            <FeaturesBar />
+
             <ServicesSection />
             <StoreSection onOpenModal={() => setModalOpen(true)} />
             <AboutSection />

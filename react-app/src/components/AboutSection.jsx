@@ -75,6 +75,38 @@ export default function AboutSection() {
 
         </div>
 
+        {/* TEAM SECTION */}
+        <div style={{ marginTop: '5rem' }}>
+          <h3 className="vision-heading" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>Meet The Team</h3>
+          <div className="about-team-grid">
+            
+            <div className="team-card">
+              <img src="/prasad.jpg" alt="N.B.L.V. Prasad" className="team-image" />
+              <h4 className="team-name">N.B.L.V. Prasad (Ph.D.)</h4>
+              <span className="team-role">Founder</span>
+              <p className="team-desc">
+                Technical Expert in Artificial Intelligence, Robotics, Internet of Things (IoT), Drone Systems, Computer Vision, Embedded Systems, and 3D Printing Technologies.
+              </p>
+              <p className="team-desc" style={{ marginTop: '0.8rem' }}>
+                Committed to designing intelligent automation solutions that improve efficiency, accuracy, and productivity across education and industry.
+              </p>
+            </div>
+
+            <div className="team-card">
+              <img src="/sai_krishna.jpg" alt="Sai Krishna" className="team-image" />
+              <h4 className="team-name">Sai Krishna</h4>
+              <span className="team-role">B.Tech, Technical Engineer</span>
+              <p className="team-desc">
+                Expert in Python Development, GIS Mapping, Web Development, Data Visualization, and Automation Solutions.
+              </p>
+              <p className="team-desc" style={{ marginTop: '0.8rem' }}>
+                Passionate about building scalable software applications and location-based intelligent systems.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
       </div>
     </section>
   )

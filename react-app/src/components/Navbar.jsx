@@ -40,20 +40,15 @@ export default function Navbar({ onOpenLogin, profile, onLogout, onChangePasswor
     }
   }
 
-  const navItems = [
-    { label: 'Home',         href: '#home',     id: 'nav-home'     },
-    { label: 'Our Services', href: '#services', id: 'nav-services' },
-    { label: 'Store',        href: '#store',    id: 'nav-store'    },
-    { label: 'About',        href: '#about',    id: 'nav-about'    },
-  ]
-
+  let navItems = []
   if (!profile) {
-    navItems.push({
-      label: 'Login',
-      href: '#login',
-      id: 'nav-login',
-      extra: 'nav-login'
-    })
+    navItems = [
+      { label: 'Home',         href: '#home',     id: 'nav-home'     },
+      { label: 'Our Services', href: '#services', id: 'nav-services' },
+      { label: 'Store',        href: '#store',    id: 'nav-store'    },
+      { label: 'About',        href: '#about',    id: 'nav-about'    },
+      { label: 'Login',        href: '#login',    id: 'nav-login', extra: 'nav-login' }
+    ]
   }
 
   return (
@@ -61,7 +56,16 @@ export default function Navbar({ onOpenLogin, profile, onLogout, onChangePasswor
       <div className="navbar-container">
 
         {/* Logo */}
-        <a href="#home" className="logo-link" id="logo-anchor">
+        <a 
+          href="#home" 
+          className="logo-link" 
+          id="logo-anchor"
+          onClick={() => {
+            if (profile) {
+              onLogout()
+            }
+          }}
+        >
           <div className="logo-icon-box">
             <svg viewBox="0 0 100 100" className="logo-svg-box" xmlns="http://www.w3.org/2000/svg">
               <ellipse

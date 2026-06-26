@@ -18,7 +18,7 @@ export default function StoreSection({ onOpenModal }) {
           <div className="product-image-box">
             <div className="product-badge">INTEGRATED HARDWARE</div>
             <img 
-              src="/spacevanta_printer.png" 
+              src="/product_new.jpg" 
               alt="SpaceVanta High-Speed Document Printer" 
               className="product-img"
             />

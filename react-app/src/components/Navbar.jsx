@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 export default function Navbar({ onOpenLogin, profile, onLogout, onChangePasswordClick }) {
   const [activeSection, setActiveSection] = useState('home')
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Scroll spy — highlight active nav link based on scroll position
   useEffect(() => {
@@ -25,6 +26,7 @@ export default function Navbar({ onOpenLogin, profile, onLogout, onChangePasswor
   }, [])
 
   const handleNavClick = (e, href, id) => {
+    setMobileMenuOpen(false)
     if (id === 'nav-login') {
       e.preventDefault()
       onOpenLogin()
@@ -103,8 +105,19 @@ export default function Navbar({ onOpenLogin, profile, onLogout, onChangePasswor
           <span className="logo-text">MDJ SpaceVanta</span>
         </a>
 
+        {/* Mobile Toggle Button */}
+        <button 
+          className="mobile-menu-toggle"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle navigation"
+        >
+          <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
+          <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
+          <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
+        </button>
+
         {/* Navigation links */}
-        <nav className="nav-menu" id="navigation-menu">
+        <nav className={`nav-menu ${mobileMenuOpen ? 'mobile-open' : ''}`} id="navigation-menu">
           {navItems.map(({ label, href, id, extra }) => (
             <a
               key={id}

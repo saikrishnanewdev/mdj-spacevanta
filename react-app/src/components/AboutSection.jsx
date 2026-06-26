@@ -104,6 +104,18 @@ export default function AboutSection() {
               </p>
             </div>
 
+            <div className="team-card">
+              <img src="/satya.jpg" alt="P. Satya" className="team-image" />
+              <h4 className="team-name">P. Satya</h4>
+              <span className="team-role">M.Tech, Business Advisor</span>
+              <p className="team-desc">
+                Strategic Business Advisor with expertise in business development, client relationship management, and operational planning.
+              </p>
+              <p className="team-desc" style={{ marginTop: '0.8rem' }}>
+                Passionate about driving organizational growth through innovative solutions and effective decision-making.
+              </p>
+            </div>
+
           </div>
         </div>
 

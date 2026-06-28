@@ -2351,3 +2351,34 @@ body {
     margin-right: 0 !important;
   }
 }
+
+/* ==========================================
+   AI EVALUATION ANIMATIONS
+   ========================================== */
+@keyframes scan-line-move {
+  0% { transform: translateY(-8px); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(8px); opacity: 0; }
+}
+
+.scan-line-anim {
+  animation: scan-line-move 1.5s linear infinite;
+  stroke: var(--dash-accent);
+  filter: drop-shadow(0 0 3px var(--dash-accent));
+}
+
+.ai-evaluating-text {
+  background: linear-gradient(90deg, var(--dash-text), var(--dash-accent), var(--dash-text));
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shine 2s linear infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}

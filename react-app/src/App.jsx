@@ -44,6 +44,7 @@ export default function App() {
   // Loading/Error states for forms
   const [actionLoading, setActionLoading] = useState(false)
   const [actionError, setActionError] = useState(null)
+  const [actionSuccess, setActionSuccess] = useState(null)
   const [feedbackModal, setFeedbackModal] = useState(null)
 
   const fetchProfile = async (userId) => {
@@ -372,6 +373,7 @@ export default function App() {
     e.preventDefault()
     setActionLoading(true)
     setActionError(null)
+    setActionSuccess(null)
 
     try {
       let qpUrl = ''
@@ -407,7 +409,7 @@ export default function App() {
       setExamClassName('')
       setQuestionPaperFile(null)
       setAnswerKeyFile(null)
-      alert('Exam configuration published successfully!')
+      setActionSuccess('Exam configuration published successfully!')
     } catch (err) {
       console.error('Error creating exam:', err)
       setActionError(err.message || 'Failed to configure exam. Ensure database storage policies are set.')
@@ -484,30 +486,6 @@ export default function App() {
       setEvaluationLogs(prev => prev.map((l, idx) => idx === i ? { ...l, status: 'processing' } : l))
 
       try {
-        // Load the PDF using pdf-lib to split OMR and Answer pages
-        const arrayBuffer = await file.arrayBuffer()
-        const pdfDoc = await PDFDocument.load(arrayBuffer)
-        const pageCount = pdfDoc.getPageCount()
-
-        if (pageCount < 2) {
-          throw new Error("Student PDF must contain at least 2 pages (Page 1 = OMR, Pages 2+ = Answers).")
-        }
-
-        // Create OMR PDF (Page 1)
-        const omrDoc = await PDFDocument.create()
-        const [omrPage] = await omrDoc.copyPages(pdfDoc, [0])
-        omrDoc.addPage(omrPage)
-        const omrBytes = await omrDoc.save()
-        const omrFile = new File([omrBytes], "omr_front_page.pdf", { type: "application/pdf" })
-
-        // Create Answers PDF (Pages 2+)
-        const answersDoc = await PDFDocument.create()
-        const answerPageIndices = Array.from({ length: pageCount - 1 }, (_, i) => i + 1)
-        const answerPages = await answersDoc.copyPages(pdfDoc, answerPageIndices)
-        answerPages.forEach(p => answersDoc.addPage(p))
-        const answersBytes = await answersDoc.save()
-        const answersFile = new File([answersBytes], "student_answers_only.pdf", { type: "application/pdf" })
-
         // 1. Upload ORIGINAL scanned sheet to Supabase Storage
         const scannedUrl = await uploadFileToStorage(file, 'student_papers')
 
@@ -519,10 +497,7 @@ export default function App() {
         let evalResult = null
 
         // EVALUATE ANSWERS via Supabase Edge Function
-        setEvaluationLogs(prev => prev.map((l, idx) => idx === i ? { ...l, status: 'processing', error: 'Uploading Answers & Evaluating via API...' } : l))
-
-        // Upload the answers-only PDF to storage to get a public URL for the Edge Function
-        const sUrl = await uploadFileToStorage(answersFile, 'student_papers_answers')
+        setEvaluationLogs(prev => prev.map((l, idx) => idx === i ? { ...l, status: 'processing', error: null } : l))
 
         // Invoke the Edge Function using standard fetch to bypass Supabase's generic 400 error swallowing
         const session = await supabase.auth.getSession()
@@ -537,7 +512,7 @@ export default function App() {
           body: JSON.stringify({
             q_url: selectedExam.question_paper_url,
             m_url: selectedExam.answer_key_url,
-            s_url: sUrl,
+            s_url: scannedUrl,
             level: "Moderate"
           })
         })
@@ -921,6 +896,13 @@ export default function App() {
                       </div>
                     )}
 
+                    {actionSuccess && (
+                      <div style={{ color: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '0.75rem 1rem', borderRadius: '0.5rem', fontSize: '0.85rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        {actionSuccess}
+                      </div>
+                    )}
+
                     <button type="submit" className="btn btn-teal" style={{ padding: '0.85rem 2.5rem' }} disabled={actionLoading}>
                       {actionLoading ? 'PUBLISHING...' : 'PUBLISH EXAM CONFIG'}
                     </button>
@@ -959,10 +941,21 @@ export default function App() {
                       <label>Upload Student Scanned Papers</label>
                       <div className="file-upload-zone" style={{ pointerEvents: (!selectedExamId || evaluating) ? 'none' : 'auto', opacity: (!selectedExamId) ? 0.5 : 1 }}>
                         <div className="upload-icon-wrapper">
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="M9 15l3-3 3 3"/></svg>
+                          {evaluating ? (
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--dash-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ filter: 'drop-shadow(0 0 8px var(--dash-accent))' }}>
+                              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                              <line x1="3" y1="12" x2="21" y2="12" className="scan-line-anim"></line>
+                            </svg>
+                          ) : (
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="M9 15l3-3 3 3"/></svg>
+                          )}
                         </div>
-                        <p className="upload-zone-text">Choose scanned answer sheets (Multiple allowed)</p>
-                        <p className="upload-zone-sub">PDFs or image files</p>
+                        <p className="upload-zone-text">
+                          {evaluating ? <span className="ai-evaluating-text" style={{ fontSize: '1.1rem' }}>AI Grading Engine Active...</span> : 'Choose scanned answer sheets (Multiple allowed)'}
+                        </p>
+                        <p className="upload-zone-sub">
+                          {evaluating ? 'Please wait while papers are processed' : 'PDFs or image files'}
+                        </p>
                         <input
                           type="file"
                           accept=".pdf,image/*"
@@ -1013,7 +1006,15 @@ export default function App() {
                                 <span className="log-title">{log.fileName}</span>
                                 <span className={`log-status ${log.status}`}>
                                   {log.status === 'pending' && 'Queued'}
-                                  {log.status === 'processing' && 'Evaluating...'}
+                                  {log.status === 'processing' && (
+                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--dash-accent)' }}>
+                                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="3" y1="12" x2="21" y2="12" className="scan-line-anim"></line>
+                                      </svg>
+                                      <span className="ai-evaluating-text">Evaluating...</span>
+                                    </span>
+                                  )}
                                   {log.status === 'success' && `✓ Graded: ${log.score}/100`}
                                   {log.status === 'error' && '✗ Failed'}
                                 </span>

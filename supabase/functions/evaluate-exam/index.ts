@@ -25,7 +25,8 @@ serve(async (req) => {
       throw new Error("Server configuration error: Missing HF_TOKEN secret")
     }
 
-    const client = await Client.connect("NBLVPrasad/ExamEvaluationSystem_Pdf_Version2", {
+    const spaceName = Deno.env.get('HF_SPACE_NAME') || "NBLVPrasad/ExamEvaluationSystem_Pdf_Version2"
+    const client = await Client.connect(spaceName, {
       token: HF_TOKEN
     })
 
